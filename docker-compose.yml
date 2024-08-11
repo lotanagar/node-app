@@ -1,0 +1,33 @@
+
+services:
+  server:
+    image: server:1.0.0
+    container_name: ${SERVER_HOST}
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    env_file: .env
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
+    volumes:
+      - ./server:/server
+      - server-v-node-module:/server/node_modules
+    depends_on:
+      - database
+
+  database:
+    image: database:1.0.0
+    container_name: ${DATABASE_HOST}
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    env_file: .env
+    ports:
+      - ${DATABASE_PORT}:${DATABASE_PORT}
+    volumes:
+      - database-v:/data/db
+volumes:
+  server-v-node-module:
+    name: "server-v-node-module"
+  database-v:
+    name: "database-v"
